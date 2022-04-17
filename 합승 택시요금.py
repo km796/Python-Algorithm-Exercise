@@ -1,62 +1,47 @@
-from collections import deque
-def solution(n, s, a, b, fares):
-    answer = 0
-    graph = [[-1]*n+1 for _ in range(n+1)]
-
-    for fare in fares:
-        graph[fare[0]][fare[1]] = fare[2]
-
-    apaths = []
-    bpaths = []
-    def findPaths(path, node):
-        if node == a:
-            apaths.append(path)
-        if node == b:
-            bpaths.append(path)
-
-        for i in range(n+1):
-            if graph[node][i] > -1:
-                findPaths(path + i, i)
-
-    return answer
-
+import heapq
 graph = []
-visited = {}
-def shortest_path(n, fares, a, b):
-    global graph
-    global visited
-    graph = [[-1]*(n+1) for _ in range(n+1)]
+L =0
 
+def solution(n, s, a, b, fares):
+    global graph
+    global L
+    L =n
+    graph = [[-1]*(n+1) for _ in range(n+1)]
     for fare in fares:
         graph[fare[0]][fare[1]] = fare[2]
         graph[fare[1]][fare[0]] = fare[2]
 
-    q = deque()
-    q.append(a)
-    visited[a] = 0
+    cost = shortest_path(s, a) + shortest_path(s, b)
+
+    for i in range(1, n+1):
+        if s!=i:
+            cost = min(cost, shortest_path(i, a) + shortest_path(i, b) + shortest_path(s, i))
+    return cost
+
+def shortest_path(a, b):
+    D = {v: float('inf') for v in range(L+1)}
+    visited = set()
+
+    q = []
+    heapq.heappush(q, [0, a])
+    D[a] = 0
 
     while q:
-        cur = q.popleft()
+        x, cur = heapq.heappop(q)
+        visited.add(cur)
 
-        for nei in to_visit(cur):
+        for nei in range(len(graph[cur])):
+            if graph[cur][nei] == -1:
+                continue
             if nei not in visited:
-                visited[nei] = visited[cur] + graph[cur][nei]
-                q.append(nei)
-            else:
-                if visited[cur] + graph[cur][nei] < visited[nei]:
-                    visited[nei] = visited[cur] + graph[cur][nei]
-                    q.append(nei)
-
-    return visited[b]
-
-def to_visit(a):
-    res = []
-    for i in range(len(graph[a])):
-        if graph[a][i] != -1:
-            res.append(i)
-    return res
+                old_dist = D[nei]
+                new_dist = D[cur] + graph[cur][nei]
+                if new_dist < old_dist:
+                    heapq.heappush(q, [new_dist, nei])
+                    D[nei] = new_dist
+    return D[b]
 
 fares = [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]
+# fares = [[2,6,6], [6,3,7], [4,6,7], [6,5,11], [2,5,12], [5,3,20], [2,4,8], [4,3,9]]
 
-print(shortest_path(6, fares, 4, 3))
-# print(solution(6,4,6,2, fares))
+print(solution(6,4,6,2, fares))
