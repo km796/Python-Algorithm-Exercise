@@ -13,22 +13,16 @@ class Solution:
             self.check(path, i, j)
 
     def check(self, path, i, j):
-
         for k in range(len(path)):
-            if i+k < len(path):
-                if path[i+k][j] == 1:
+            dirs = [[i+k,j],[i-k,j],[i,j+k],[i,j-k],[i+k,j+k],[i-k,j-k],[i+k,j-k],[i-k,j+k]]
+            for dir in dirs:
+                if 0 <= dir[0] < len(path) and 0 <= dir[1] < len(path) and path[dir[0]][dir[1]] == 1:
                     return False
-            if i-k >=0:
-                if path[i-k][j] == 1:
-                    return False
-            if j+k < len(path[0]):
-                if path[i][j+k] == 1:
-                    return False
-            if j-k >= 0:
-                if path[i][j-k] == 1:
-                    return False
-            if i+k < len(path) and j+k < len(path[0]):
-                if path[i+k][j+k] == 1: return False
+        return True
+
+
+
+
 
 
 
