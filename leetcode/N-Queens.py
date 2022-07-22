@@ -5,10 +5,15 @@ class Solution:
 
         ans = set()
         board = [[0]*n for _ in range(n)]
+        visited = set()
 
         def backtrack(path, i, j, qs):
+            tPath = tuple(map(tuple, path))
+            if (tPath, i, j) in visited:
+                return
+            visited.add((tPath, i, j))
             if qs == n:
-                ans.add(tuple(map(tuple, path)))
+                ans.add(tPath)
                 return
             if i>=len(path) or j>=len(path[0]):
                 return
