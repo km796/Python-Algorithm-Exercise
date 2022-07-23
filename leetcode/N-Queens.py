@@ -5,32 +5,18 @@ class Solution:
 
         ans = set()
         board = [[0]*n for _ in range(n)]
-        visited = set()
 
-        def backtrack(path, i, j, qs):
-            tPath = tuple(map(tuple, path))
-            if (tPath, i, j) in visited:
-                return
-            visited.add((tPath, i, j))
-            if qs == n:
+        def backtrack(path, row):
+            if row == n:
+                tPath = tuple(map(tuple, path))
                 ans.add(tPath)
                 return
-            if i>=len(path) or j>=len(path[0]):
-                return
-            if self.check(path, i, j):
-                path[i][j] = 1
-                if j==len(path[0])-1:
-                    backtrack(path, i+1, 0, qs+1)
-                else:
-                    backtrack(path, i, j+1, qs+1)
-                path[i][j] = 0
-
-            if j==len(path[0])-1:
-                backtrack(path, i+1, 0, qs)
-            else:
-                backtrack(path, i, j+1, qs)
-        backtrack(board, 0, 0, 0)
-
+            for i in range(n):
+                if self.check(path, row, i):
+                    path[row][i] = 1
+                    backtrack(path, row+1)
+                    path[row][i] = 0
+        backtrack(board, 0)
         return list(map(self.convert, ans))
 
     def check(self, path, i, j):
@@ -51,7 +37,7 @@ class Solution:
         return res
 
 sol = Solution()
-print(sol.solveNQueens(8))
+print(sol.solveNQueens(4))
 
 
 
