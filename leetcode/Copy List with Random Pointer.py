@@ -24,9 +24,6 @@ class Solution:
 
         return dum
 
-    def copyRandomList1(self, head: 'Optional[Node]') -> 'Optional[Node]':
-
-
 sol = Solution()
 sol.copyRandomList()
 
