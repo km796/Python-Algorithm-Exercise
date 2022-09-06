@@ -9,17 +9,11 @@ class Solution:
         p = "0"+p
         T[0][0] = True
 
-        for i in range(1, len(T)):
-            T[i][0] = False
-        for i in range(1, len(T[0])):
-            T[0][i] = False
-
-        if len(p) >= 3 and p[2] == '*':
-            T[0][2] = True
-
         sym = ['.', '*']
-        for i in range(1, len(T)):
-            for j in range(1, len(T[0])):
+        for i in range(0, len(T)):
+            for j in range(0, len(T[0])):
+                if i == 0 and j == 0:
+                    continue
                 if p[j] not in sym or p[j] == '.':
                     T[i][j] = T[i-1][j-1] if p[j] == s[i] or p[j] == '.' else False
                     continue
@@ -39,8 +33,11 @@ class Solution:
         print(df)
         return T[-1][-1]
 
-s ="aab"
-p = "c*a*b"
+# s ="aab"
+# p = "c*a*b"
+
+s = "aaabaaaababcbccbaab"
+p = "c*c*.*c*a*..*c*"
 
 sol = Solution()
 print(sol.isMatch(s, p))
